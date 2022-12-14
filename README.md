@@ -4,6 +4,34 @@
 
 ![pins](images/pins.png)
 
+### Проблемы с подключением Rasberry Pi Pico
+
+Если при подключении Rasberry Pi Pico - устройство не определяется в системе, решить проблему можно созданием нового правила udev. 
+Для создания правила плата должна определяться в ситеме, в данном примере плата определена как /dev/ttyACM0.
+
+```
+sudo udevadm info --attribute-walk --path=$(udevadm info --query=path --name=/dev/ttyACM0)
+```
+
+Создаем новое правило udev /etc/udev/rules.d/rasberry_pi_pico.rules, используя параметры полученные из вывода вышеуказанной команды:
+
+```
+KERNEL=="ttyACM0", SUBSYSTEM=="tty", SUBSYSTEMS=="usb", ATTRS{vendor}=="0x1022", ATTRS{product}=="Board in FS mode", GROUP="dialout", MODE="0660"
+```
+
+Тестируем правило:
+
+```
+udevadm test $(udevadm info -q path -n /dev/ttyACM0) 2>&1
+```
+
+Применяем правило:
+
+```
+sudo udevadm control --reload-rules
+sudo udevadm trigger
+```
+
 ### Железнодорожный переезд со шлагбаумом
 
 При нажатии на кнопку начинает работать сигнализация (мигают две верхние красные лампы светофора) и опускаются шлагбаумы. Время закрытия переезда 1 минута, после чего перестает работать сигнализация (загораются две зеленые лампы светофора) и поднимаются шлагбаумы.
