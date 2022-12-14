@@ -7,13 +7,13 @@
 ### Проблемы с подключением Rasberry Pi Pico
 
 Если при подключении Rasberry Pi Pico - устройство не определяется в системе, решить проблему можно созданием нового правила udev. 
-Для создания правила плата должна определяться в ситеме, в данном примере плата определена как /dev/ttyACM0.
+Для создания правила плата должна определяться в системе, в данном примере плата определена как /dev/ttyACM0.
 
 ```
 sudo udevadm info --attribute-walk --path=$(udevadm info --query=path --name=/dev/ttyACM0)
 ```
 
-Создаем новое правило udev /etc/udev/rules.d/rasberry_pi_pico.rules, используя параметры полученные из вывода вышеуказанной команды:
+Создаем новое правило udev /etc/udev/rules.d/rasberry_pi_pico.rules, используя параметры полученные из вывода команды приведенной выше:
 
 ```
 KERNEL=="ttyACM0", SUBSYSTEM=="tty", SUBSYSTEMS=="usb", ATTRS{vendor}=="0x1022", ATTRS{product}=="Board in FS mode", GROUP="dialout", MODE="0660"
@@ -65,3 +65,4 @@ USB-кабель для питания драйвера двигателя от 
 
 ![railroad_crossing](images/railroad_crossing_2.jpg)
 
+### Робот-автомобиль управляемый по Bluetooth
